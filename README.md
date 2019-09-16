@@ -5,21 +5,42 @@ Making a telegram bot using Raccoon makes it easy for developers to focus on dev
 
 One of Raccoon's goals is to be able to automatically execute the methods in each feature just by entering the name of the method to be executed in the callback data.
 
-## Example
+## Why use Raccoon
+
+1. Easy workflow (focus on developing feature).
+2. Easily set how long a session for a feature over.
+3. The response format is easy to read, etc.
+
+## Quick Start
+
+Create project
+
+```bash
+$ mdkir app
+$ touch app/Task.js
+$ touch main.js
+```
+Install racconjs
+
+```bash
+$ npm i raccoonjs
+```
+
+Create Feature
+
 ```js
-// Task.js
-const { Feature } = require('../../core/Raccoon')
-const { makeButton } = require('../../core/utils')
+// ./app/Task.js
+const { Feature } = require('raccoonjs/Raccoon')
+const { makeButton } = require('raccoonjs/utils')
 class Task extends Feature{
     constructor(id){
         super(id)
     }
 
     start(){
-        // response
         return {
             id: this.id,
-            type : "$send", // ["$edit", "$delete", "$answer"]
+            type : "$send",
             message : "Hello, World!",
             options : {
                 parse_mode: "Markdown",
@@ -29,12 +50,12 @@ class Task extends Feature{
                             makeButton("Left",{
                                 prefix : this.prefix,
                                 action: "onLeftClicked",
-                                params: "1"
-                            }), 
+                                params: "params on left"
+                            }),
                             makeButton("Right",{
                                 prefix : this.prefix,
                                 action: "onRightClicked",
-                                params: "2"
+                                params: "params on Right"
                             })
                         ]
                     ]
@@ -43,20 +64,21 @@ class Task extends Feature{
         }
     }
 
-    /* action when button 'Left' clicked */
     onLeftClicked(params, context){
-        console.log(params) // 1
+        console.log(params)
     }
 
-    /* action when button 'Right' clicked */
     onRightClicked(params, context){
-        console.log(params) // 2
+        console.log(params)
     }
+
 }
 ```
+Create main
 
 ```js
 // main.js
+const { Raccoon } = require('raccoonjs/Raccoon')
 const { Task }  = require('./app/Task')
 const R = new Raccoon(process.env.BOT_TOKEN, {polling: true})
 R.onText(/\/t/, context => {
@@ -68,24 +90,18 @@ R.onText(/\/t/, context => {
 })
 R.watchFeatureCallback()
 ```
+Result
 
-## Result
 <img src="./images/response.png">
 
-## See more examples
-```bash
-$ git clone https://github.com/josestg/raccoon.git
-$ cd example
-$ nodemon main.js
-```
-commands : **/t** or **/r**
+[See more example](https://github.com/josestg/raccoonjs-example)
+
+## Similar Projects
+1. [raccoonjs-example](https://github.com/josestg/raccoonjs-example)
+2. [privy-standup-meeting-bot](https://github.com/mtfiqh/privy-standup-meeting-bot)
 
 
-## Why use Raccoon
 
-1. Easy workflow (focus on developing feature).
-2. Easily set how long a session for a feature over.
-3. The response format is easy to read, etc.
 
 
 
