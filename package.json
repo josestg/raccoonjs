@@ -1,0 +1,37 @@
+{
+  "name": "raccoon",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "directories": {
+    "doc": "docs",
+    "example": "example",
+    "test": "test"
+  },
+  "dependencies": {
+    "node-telegram-bot-api": "^0.30.0",
+    "nodemon": "^1.19.2"
+  },
+  "devDependencies": {
+    "mocha": "^6.2.0"
+  },
+  "scripts": {
+    "test": "mocha"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/josestg/raccoon.git"
+  },
+  "keywords": [
+    "telegram-bot",
+    "telegram-bot",
+    "api",
+    "nodejs"
+  ],
+  "author": "Jose Sitanggang",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/josestg/raccoon/issues"
+  },
+  "homepage": "https://github.com/josestg/raccoon#readme"
+}
