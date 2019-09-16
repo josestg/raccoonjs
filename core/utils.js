@@ -5,6 +5,11 @@ const {
     CHECK_ICON
 } = require("./constants");
 
+/**
+ * Make Inline Button
+ * @param {string} text 
+ * @param {Object} callbackData 
+ */
 function makeButton(text, callbackData) {
     const { prefix, action, params } = callbackData;
     return {
@@ -13,15 +18,28 @@ function makeButton(text, callbackData) {
     };
 }
 
+/**
+ * Toogle check icon from given text
+ * @param {string} text 
+ */
 function toogleCheckIcon(text) {
     if (text.includes(CHECK_ICON)) return text.split(CHECK_ICON).pop();
     return CHECK_ICON + text;
 }
 
+/**
+ * Encode keyboard positition to string formated
+ * @param {int} row 
+ * @param {int} col 
+ */
 function encodePosition(row, col) {
     return `${row}${btnsep}${col}`;
 }
 
+/**
+ * Decode params to keyboard postition
+ * @param {string} dataPosition 
+ */
 function decodePosition(dataPosition) {
     const position = dataPosition.split(btnsep);
     return {
@@ -29,6 +47,11 @@ function decodePosition(dataPosition) {
         col: parseInt(position[1])
     };
 }
+
+/**
+ * decode callback data
+ * @param {string} data 
+ */
 function decodeCallbackData(data) {
     const [prefix, method, params] = data.split(cbsep);
     const [featureName, owner] = prefix.split(fsep);
