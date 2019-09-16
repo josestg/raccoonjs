@@ -1,6 +1,6 @@
 {
-  "name": "@joseastg/raccoon",
-  "version": "1.0.0-l",
+  "name": "raccoonjs",
+  "version": "1.0.0",
   "description": "",
   "main": "index.js",
   "directories": {
@@ -19,7 +19,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/josestg/raccoon.git"
+    "url": "git+https://github.com/josestg/raccoonjs.git"
   },
   "keywords": [
     "telegram-bot",
@@ -30,7 +30,7 @@
   "author": "Jose Sitanggang",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/josestg/raccoon/issues"
+    "url": "https://github.com/josestg/raccoonjs/issues"
   },
-  "homepage": "https://github.com/josestg/raccoon#readme"
+  "homepage": "https://github.com/josestg/raccoonjs#readme"
 }
