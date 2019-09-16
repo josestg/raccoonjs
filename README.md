@@ -1,11 +1,11 @@
 
-# Raccoon : Mini-framework for Telegram Bots
+# Raccoonjs : Mini-framework for Telegram Bots
 
-Making a telegram bot using Raccoon makes it easy for developers to focus on developing features. 
+Making a telegram bot using Raccoonjs makes it easy for developers to focus on developing features. 
 
 One of Raccoon's goals is to be able to automatically execute the methods in each feature just by entering the name of the method to be executed in the callback data.
 
-## Why use Raccoon
+## Why use Raccoonjs
 
 1. Easy workflow (focus on developing feature).
 2. Easily set how long a session for a feature over.
