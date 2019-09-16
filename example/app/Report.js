@@ -1,5 +1,5 @@
-const { Feature } = require("../../core/Raccoon");
-const utils = require("../../core/utils");
+const { Feature } = require("@joseastg/raccoon/core/Raccoon")
+const utils = require("@joseastg/raccoon/core/utils");
 const db = require("./fakedb");
 
 class Report extends Feature {

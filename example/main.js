@@ -1,5 +1,5 @@
 
-const { Raccoon } = require('../core/Raccoon')
+const { Raccoon } = require('@joseastg/raccoon/core/Raccoon')
 const { Report }  = require('./app/Report')
 const { Task }  = require('./app/Task')
 
