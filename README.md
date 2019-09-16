@@ -1,5 +1,5 @@
 
-# Raccoon : Mini-framework for Creating Telegram Bots
+# Raccoon : Mini-framework for Telegram Bots
 
 Making a telegram bot using Raccoon makes it easy for developers to focus on developing features. 
 
