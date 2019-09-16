@@ -1,17 +1,12 @@
 const {
-    CALLBACK_DATA_SEPARATOR,
     FEATURE_PREFIX_SEPARATOR,
     FEATURE_TIME_OUT,
     RESPONSE_TYPES
 } = require("./constants");
 
-const TelegramBot = require("node-telegram-bot-api");
 
-function decodeCallbackData(data) {
-    const [prefix, method, params] = data.split(CALLBACK_DATA_SEPARATOR);
-    const [featureName, owner] = prefix.split(FEATURE_PREFIX_SEPARATOR);
-    return { prefix, method, params, featureName, owner };
-}
+const TelegramBot = require("node-telegram-bot-api");
+const utils = require('./utils')
 
 class Feature {
     constructor(id) {
@@ -65,7 +60,7 @@ class Raccoon extends TelegramBot {
         // Stores all features that is registered.
         // { owner : { feature_name : feature_instance }}
         this.activityState = {};
-
+        this.activeActivities = new Set([])
         this.debug = true;
     }
 
@@ -74,16 +69,47 @@ class Raccoon extends TelegramBot {
             throw new Error(`owner or feature undefined`);
 
         const _owner = owner.toString();
+        const token  =  this.getToken(_owner, feature.name)
+
+        if(this.isActivityActive(token)){
+            console.log(`Register :: ${feature.name} is running`)
+            return token
+        }
+
         if (this.activityState[_owner] === undefined) {
             this.activityState[_owner] = {};
         }
         this.activityState[_owner][feature.name] = feature;
+        return token
     }
 
-    async start(feature) {
+    getToken(owner, featureName){
+        
+        return  owner + featureName
+    }
+
+    isActivityActive(token){
+        return this.activeActivities.has(token)
+    }
+
+    activateActivity(token){
+        this.activeActivities.add(token)
+    }
+
+    deactivateActivity(token){
+        this.activeActivities.delete(token)
+    }
+    
+
+    async start(token,feature) {
+        if(this.isActivityActive(token)){
+            console.log(`${feature.name} is running`)
+            return
+        }
         const response = await feature.start();
         const { id, message, options } = response;
         this.sendMessage(id, message, options);
+        this.activateActivity(token)
     }
 
     watchFeatureCallback() {
@@ -108,7 +134,7 @@ class Raccoon extends TelegramBot {
     }
 
     async _handleCallbackQuery(context) {
-        const { method, params, featureName, owner } = decodeCallbackData(
+        const { method, params, featureName, owner } = utils.decodeCallbackData(
             context.data
         );
 
@@ -116,6 +142,7 @@ class Raccoon extends TelegramBot {
 
         if (activity.isSessionExpired()) {
             this.answerCallbackQuery(context.id, { text: "Session Over!" });
+            this.deleteMessage(context.from.id, context.message.message_id)
             this.cleanup(owner, featureName);
             return;
         }
@@ -149,7 +176,11 @@ class Raccoon extends TelegramBot {
             chat_id: resp.id,
             ...resp.options
         }).catch(error => {
-            console.error("$edit ::", error);
+            if(error.code == 'ETELEGRAM'){
+                console.error("ERROR", "400 Bad Request: message is not modified")
+            }else{
+                console.error("$edit ::", error);
+            }
         });
     }
 
@@ -164,6 +195,7 @@ class Raccoon extends TelegramBot {
     }
 
     cleanup(owner, name) {
+        this.deactivateActivity(this.getToken(owner, name))
         delete this.activityState[owner][name];
         if (Object.keys(this.activityState[owner]).length == 0)
             delete this.activityState[owner];

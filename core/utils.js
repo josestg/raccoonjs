@@ -1,6 +1,7 @@
 const {
     CALLBACK_DATA_SEPARATOR: cbsep,
     BUTTON_POSITION_SEPARATOR: btnsep,
+    FEATURE_PREFIX_SEPARATOR : fsep,
     CHECK_ICON
 } = require("./constants");
 
@@ -28,10 +29,16 @@ function decodePosition(dataPosition) {
         col: parseInt(position[1])
     };
 }
+function decodeCallbackData(data) {
+    const [prefix, method, params] = data.split(cbsep);
+    const [featureName, owner] = prefix.split(fsep);
+    return { prefix, method, params, featureName, owner };
+}
 
 module.exports = {
     makeButton,
     decodePosition,
     encodePosition,
-    toogleCheckIcon
+    toogleCheckIcon,
+    decodeCallbackData
 };

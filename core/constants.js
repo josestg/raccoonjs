@@ -1,4 +1,4 @@
-const FEATURE_TIME_OUT = 120; //second
+const FEATURE_TIME_OUT = 30; //second
 const CALLBACK_DATA_SEPARATOR = "~";
 const FEATURE_PREFIX_SEPARATOR = "@";
 const BUTTON_POSITION_SEPARATOR = "#";
