@@ -101,7 +101,9 @@ Result
 2. [privy-standup-meeting-bot](https://github.com/mtfiqh/privy-standup-meeting-bot)
 
 
-
+## Thank You
+1. [Dimas](https://github.com/dimasadyaksa)
+2. [M. Taufiq](https://github.com/mtfiqh)
 
 
 
