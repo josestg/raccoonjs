@@ -23,7 +23,7 @@ $ touch main.js
 Install racconjs
 
 ```bash
-$ npm i raccoonjs
+$ npm i raccoonjs@1.2.0
 ```
 
 Create Feature
