@@ -1,5 +1,12 @@
 const { FieldIsRequiredError } = require('./Error')
 class ResponseMessage {
+    /**
+     * Response Message is a response template that will be rendered into a telegram message.
+     * 
+     * Response Message constructor
+     * @param {string} type 
+     * @param {object} options 
+     */
     constructor(type, options){
         ResponseMessage.validate(type, options)
 
@@ -14,6 +21,9 @@ class ResponseMessage {
 
     }
 
+    /**
+     * Return response message body. 
+     */
     body(){
         const options = { 
             parse_mode : this.parseMode,
@@ -40,6 +50,12 @@ class ResponseMessage {
         
     }
 
+    /**
+     * Validate parameters for Response Message
+     * 
+     * @param {string} type 
+     * @param {object} options 
+     */
     static validate(type, options){
         if(typeof type != 'string') 
             throw new TypeError("type must be a 'string'")
