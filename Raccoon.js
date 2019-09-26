@@ -79,13 +79,13 @@ class Raccoon extends TelegramBot {
      * @param {string} token 
      * @param {Feature} feature 
      */
-    async start(token,feature) {
+    async start(token, feature) {
         if(this.isActivityActive(token)){
             if(this.debug) console.log(`${feature.name} is running`)
             return
         }
         const response = await feature.start();
-        const { owner, message, options } = response;
+        const { owner, message, options } = response.body();
         this.sendMessage(owner, message, options);
         this.activateActivity(token)
     }
@@ -137,9 +137,10 @@ class Raccoon extends TelegramBot {
         }
 
         const response = await activity.run(method, params, context);
-        this._handleResponse(response, context);
-        if(response != undefined){
-            if (response.destroy && response.destroy == true) {
+        const responseBody = response.body()
+        this._handleResponse(responseBody, context);
+        if(responseBody != undefined){
+            if (responseBody.destroy && responseBody.destroy == true) {
                 if(this.debug) console.log(this.activityState[owner])
                 this.cleanup(owner, featureName);
             }
@@ -149,7 +150,7 @@ class Raccoon extends TelegramBot {
     /**
      * Handling responses based on a template
      * 
-     * @param {Object} response 
+     * @param {ResponseMessage} response 
      * @param {Object} context 
      */
     _handleResponse(response, context) {
@@ -165,7 +166,7 @@ class Raccoon extends TelegramBot {
 
     /**
      * Send messages to the telegram
-     * @param {Object} resp 
+     * @param {ResponseMessage} resp 
      */
     $send(resp) {
         this.sendMessage(resp.owner, resp.message, resp.options);
@@ -173,7 +174,7 @@ class Raccoon extends TelegramBot {
 
     /**
      * Edit telegram message
-     * @param {Object} resp 
+     * @param {ResponseMessage} resp 
      * @param {Object} context 
      */
     $edit(resp, context) {
@@ -193,7 +194,7 @@ class Raccoon extends TelegramBot {
 
     /**
      * Delete telegram message
-     * @param {Object} resp 
+     * @param {ResponseMessage} resp 
      * @param {Object} context 
      */
     $delete(resp, context) {
@@ -204,7 +205,7 @@ class Raccoon extends TelegramBot {
 
     /**
      * Send answer callbackQuery
-     * @param {Object} resp 
+     * @param {ResponseMessage} resp 
      * @param {Object} context 
      */
     $answer(resp, context) {
