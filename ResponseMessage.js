@@ -1,8 +1,8 @@
+const { FieldIsRequiredError } = require('./Error')
 class ResponseMessage {
     constructor(type, options){
-        const {errors, ok} = this.__validate(type, options)
-        if(!ok) throw new Error(errors.toString())
-        
+        ResponseMessage.validate(type, options)
+
         this.type = type
         this.owner = options.owner
         this.destroy = options.destroy || false
@@ -40,27 +40,16 @@ class ResponseMessage {
         
     }
 
-    __validate(type, options){
-        const errors = []
-        let ok = true
-        if(typeof type != 'string') {
-            errors.push("type must be a 'string'")
-            ok = false
-        }
-            
+    static validate(type, options){
+        if(typeof type != 'string') 
+            throw new TypeError("type must be a 'string'")
         
-        if(options.owner == undefined){
-            errors.push("'owner' is required!")
-            ok = false
-        }
+        if(options.owner == undefined)
+            throw new FieldIsRequiredError("'owner' is required!")
             
-        if(type != "$delete" && options.message == undefined){
-            errors.push('Message is required!')
-            ok = false
-        }
+        if(type != "$delete" && options.message == undefined)
+            throw new FieldIsRequiredError("'Message' is required!")  
             
-        return {errors, ok}
-
     }
 }
 

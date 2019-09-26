@@ -8,7 +8,15 @@ class NotImplementedError extends Error {
     }
 }
 
+class FieldIsRequiredError extends Error {
+    constructor(message){
+        super(message)
+        this.name = this.constructor.name
+    }
+}
+
 
 module.exports = {
-    NotImplementedError
+    NotImplementedError,
+    FieldIsRequiredError
 }
