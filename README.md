@@ -1,5 +1,6 @@
 
 # Raccoonjs : Mini-framework for Telegram Bots
+[![Build Status](https://travis-ci.org/josestg/raccoonjs.svg?branch=master)](https://travis-ci.org/josestg/raccoonjs)
 
 Making a telegram bot using Raccoonjs makes it easy for developers to focus on developing features. 
 
