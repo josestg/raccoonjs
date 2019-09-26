@@ -30,46 +30,53 @@ Create Feature
 
 ```js
 // ./app/Task.js
-const { Feature } = require('raccoonjs/Raccoon')
-const { makeButton } = require('raccoonjs/utils')
+const { Feature } = require('raccoonjs/Feature')
+const { makeButton } = require('raccoonjs/helper')
+const { ResponseMessage } = require('raccoonjs/ResponseMessage')
 class Task extends Feature{
-    constructor(id){
-        super(id)
+    constructor(onwer){
+        super(owner)
     }
 
     start(){
-        return {
-            id: this.id,
-            type : "$send",
-            message : "Hello, World!",
-            options : {
-                parse_mode: "Markdown",
-                reply_markup:{
-                    inline_keyboard : [
-                        [
-                            makeButton("Left",{
-                                prefix : this.prefix,
-                                action: "onLeftClicked",
-                                params: "params on left"
-                            }),
-                            makeButton("Right",{
-                                prefix : this.prefix,
-                                action: "onRightClicked",
-                                params: "params on Right"
-                            })
-                        ]
-                    ]
-                }
-            }
-        }
+        const keyboard = [[
+            makeButton("Left", {
+                prefix: this.prefix,
+                action: "onLeftClicked",
+                params: "1"
+            }),
+            makeButton("Right", {
+                prefix: this.prefix,
+                action: "onRightClicked",
+                params: "2"
+            })
+        ]];
+        
+        return new ResponseMessage("$send", {
+            owner: this.owner,
+            message: "Hello, World!",
+            inline_keyboard: keyboard
+        })
     }
 
     onLeftClicked(params, context){
-        console.log(params)
+        console.log(params) // 1
+        // edit current message
+        const { reply_markup } = context.message
+        return new ResponseMessage("$edit", {
+            owner: this.owner,
+            message: "Halo, Dunia!",
+            inline_keyboard : reply_markup.inline_keyboard
+        })
     }
 
     onRightClicked(params, context){
-        console.log(params)
+        console.log(params) // 2
+        // delete current message and destroy feature session
+        return new ResponseMessage("$delete", {
+            owner: this.owner,
+            destroy: true
+        })
     }
 
 }
@@ -92,7 +99,7 @@ R.watchFeatureCallback()
 ```
 Result
 
-<img src="./images/response.png">
+<img src="./images/demo.gif">
 
 [See more example](https://github.com/josestg/raccoonjs-example)
 
