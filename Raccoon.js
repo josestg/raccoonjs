@@ -1,83 +1,7 @@
 const TelegramBot = require("node-telegram-bot-api");
 
-const utils = require('./utils')
-const { NotImplementedError } = require('./Error')
-const {
-    FEATURE_PREFIX_SEPARATOR,
-    FEATURE_TIME_OUT,
-    RESPONSE_TYPES
-} = require("./constants");
-
-class Feature {
-    /**
-     * Abstract class
-     * 
-     * Every feature that will be used on Raccoon must be extends to the Feature class
-     * @constructor
-     * @param {any} id - A unique identity that distinguishes each feature from a different owner
-     */
-    constructor(id) {
-        if (this.constructor === Feature) {
-            throw new NotImplementedError("Feature class");
-        }
-
-        this.id = id;
-        this.name = this.constructor.name; // feature name
-        this.prefix = `${this.name}${FEATURE_PREFIX_SEPARATOR}${this.id}`; // prefix for callback data on keyboard
-        this.createdAt = new Date().getTime(); // to calculate how long a method has been executed.
-        
-    }
-
-    /**
-     * Abstract Method
-     * Methods must be implemented in classes that extend to the Feature class. 
-     * 
-     * The start method is the method used to initialize the first response of a feature instance.
-     * Returns the response template.
-     */
-    start() {
-        throw new NotImplementedError(`start method`);
-    }
-
-    /**
-     * Executes the methods available on the feature Object by using the method name
-     * 
-     * @param {string} method 
-     * @param {string} params 
-     * @param {any} context 
-     * 
-     */
-    async run(method, params, context) {
-        const func = this[method];
-        if (func === undefined) {
-            throw new Error(
-                `Feature ${this.name} doesn't have method '${method}'`
-            );
-        }
-
-        this.createdAt = new Date().getTime(); // updating the time the method is called
-        return func.call(this, params, context);
-    }
-
-    /** calculate how long a method is running */
-    get durration() {
-        const current = new Date().getTime();
-        return (current - this.createdAt) / 1000;
-    }
-
-    /** Returns true if the method has been running longer than session time */
-    isSessionExpired() {
-        return this.durration >= FEATURE_TIME_OUT;
-    }
-
-    /** Tells 'Raccoons' to immediately remove expired methods from the activity state  */
-    cleanupActivity() {
-        return {
-            type: "$cleanup",
-            id: this.id
-        };
-    }
-}
+const { decodeCallbackData } = require('./helper')
+const { RESPONSE_TYPES } = require("./constants");
 
 class Raccoon extends TelegramBot {
     /**
@@ -161,8 +85,8 @@ class Raccoon extends TelegramBot {
             return
         }
         const response = await feature.start();
-        const { id, message, options } = response;
-        this.sendMessage(id, message, options);
+        const { owner, message, options } = response;
+        this.sendMessage(owner, message, options);
         this.activateActivity(token)
     }
 
@@ -199,7 +123,7 @@ class Raccoon extends TelegramBot {
      * @param {Object} context 
      */
     async _handleCallbackQuery(context) {
-        const { method, params, featureName, owner } = utils.decodeCallbackData(
+        const { method, params, featureName, owner } = decodeCallbackData(
             context.data
         );
 
@@ -244,7 +168,7 @@ class Raccoon extends TelegramBot {
      * @param {Object} resp 
      */
     $send(resp) {
-        this.sendMessage(resp.id, resp.message, resp.options);
+        this.sendMessage(resp.owner, resp.message, resp.options);
     }
 
     /**
@@ -255,7 +179,7 @@ class Raccoon extends TelegramBot {
     $edit(resp, context) {
         this.editMessageText(resp.message, {
             message_id: context.message.message_id,
-            chat_id: resp.id,
+            chat_id: resp.owner,
             ...resp.options
         }).catch(error => {
             if (!this.debug) return
@@ -273,7 +197,7 @@ class Raccoon extends TelegramBot {
      * @param {Object} context 
      */
     $delete(resp, context) {
-        this.deleteMessage(resp.id, context.message.message_id).catch(error => {
+        this.deleteMessage(resp.owner, context.message.message_id).catch(error => {
             if(this.debug) console.error("$delete ::", error);
         });
     }
@@ -305,6 +229,5 @@ class Raccoon extends TelegramBot {
 }
 
 module.exports = {
-    Raccoon,
-    Feature
+    Raccoon
 };
