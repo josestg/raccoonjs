@@ -4,7 +4,7 @@
 
 Making a telegram bot using Raccoonjs makes it easy for developers to focus on developing features. 
 
-One of Raccoon's goals is to be able to automatically execute the methods in each feature just by entering the name of the method to be executed in the callback data.
+One of Raccoonjs's goals is to be able to automatically execute the methods in each feature just by entering the name of the method to be executed in the callback data.
 
 ## Why use Raccoonjs
 
