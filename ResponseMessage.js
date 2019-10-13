@@ -8,17 +8,26 @@ class ResponseMessage {
      * @param {object} options 
      */
     constructor(type, options){
-        ResponseMessage.validate(type, options)
-
         this.type = type
+        if(type == "$batch"){
+            if(!Array.isArray(options))
+                throw new TypeError("Options for type $batch must be an Array.")
+            
+            for(let e of options){
+                if(e instanceof ResponseMessage && e.constructor == ResponseMessage) continue
+                throw new TypeError("All items in option must be an instance of ResponseMessage")
+            }
+            this.bodies = options
+            return this
+        }
+        
+        ResponseMessage.validate(type, options)
         this.owner = options.owner
         this.destroy = options.destroy || false
         this.keyboard = options.keyboard || null
         this.parseMode = options.parse_mode || 'Markdown'
         this.inlineKeyboard = options.inline_keyboard || null
-
         if(type != "$delete" ) this.message = options.message
-
     }
 
     /**

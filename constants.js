@@ -3,7 +3,7 @@ const CALLBACK_DATA_SEPARATOR = "~";
 const FEATURE_PREFIX_SEPARATOR = "@";
 const BUTTON_POSITION_SEPARATOR = "#";
 const CHECK_ICON = "☑️ ";
-const RESPONSE_TYPES = new Set(["$send", "$edit", "$delete", "$answer"]);
+const RESPONSE_TYPES = new Set(["$send", "$edit", "$delete", "$answer", "$batch"]);
 
 module.exports = {
     RESPONSE_TYPES,

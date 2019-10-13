@@ -138,12 +138,27 @@ class Raccoon extends TelegramBot {
         }
 
         const response = await activity.run(method, params, context);
+        
         if (response == undefined) return
-        const responseBody = response.body()
-        this._handleResponse(responseBody, context);
-        if(responseBody != undefined){
-            if (responseBody.destroy && responseBody.destroy == true) {
-                if(this.debug) console.log(this.activityState[owner])
+        // special case
+        if(response.type == "$batch"){
+            response.bodies.forEach(e => {
+                const r = e.body()
+                this._handleResponse(r, context);
+                this._handleDestroy(r, owner, featureName)        
+            });
+        }else{
+            const r = response.body()
+            this._handleResponse(r, context);
+            this._handleDestroy(r, owner, featureName);
+        }
+    }
+
+    _handleDestroy(respbody, owner, featureName) {
+        if (respbody != undefined) {
+            if (respbody.destroy && respbody.destroy == true) {
+                if (this.debug)
+                    console.log(this.activityState[owner]);
                 this.cleanup(owner, featureName);
             }
         }

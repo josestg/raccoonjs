@@ -204,6 +204,37 @@ describe("Test#ResponseMessage.js", () => {
             
         }
 
+        it("Test type $batch then type options must be Array", () => {
+            const fn = () => new ResponseMessage("$batch", {})
+            assert.throws(fn, TypeError)
+        })
+
+        it("Test type $batch then all items in options must be instance of ResponseMessage (Error)", () => {
+            const fn = () => new ResponseMessage("$batch", [
+                new ResponseMessage("$edit", {
+                    owner : 1,
+                    message : "hello"
+                }),
+                "string"
+            ])
+
+            assert.throws(fn, TypeError)
+        })
+
+        it("Test type $batch then all items in options must be instance of ResponseMessage (Success)", () => {
+            const rm = new ResponseMessage("$batch", [
+                new ResponseMessage("$edit", {
+                    owner : 1,
+                    message : "hello"
+                }),
+                new ResponseMessage("$edit", {
+                    owner : 1,
+                    message : "hello"
+                }),
+            ])
+            assert.equal(rm.bodies.length, 2)
+        })
+
         it("Test type '$delete' doesn't have 'message'", () => {
             const r = new ResponseMessage("$delete", {
                 owner: 1,
