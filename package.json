@@ -1,6 +1,6 @@
 {
   "name": "raccoonjs",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "description": "",
   "main": "index.js",
   "dependencies": {
