@@ -85,6 +85,7 @@ class Raccoon extends TelegramBot {
             return
         }
         const response = await feature.start();
+        if (response == undefined) return 
         const { owner, message, options } = response.body();
         this.sendMessage(owner, message, options);
         this.activateActivity(token)
@@ -137,6 +138,7 @@ class Raccoon extends TelegramBot {
         }
 
         const response = await activity.run(method, params, context);
+        if (response == undefined) return
         const responseBody = response.body()
         this._handleResponse(responseBody, context);
         if(responseBody != undefined){
