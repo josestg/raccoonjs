@@ -211,7 +211,7 @@ class Raccoon extends BotApi {
     $answer(resp, context) {
         this.answerCallbackQuery({
             callback_query_id: context.id,
-            textL: resp.message
+            text: resp.message
         });
     }
 
